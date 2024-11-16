@@ -9,23 +9,26 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
+try:
+    import dotenv
+    dotenv.load_dotenv()
+except ModuleNotFoundError:
+    pass
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-b8b&2(zpshggb#1f%olknzmpy+6yd@dmn10ojv**rstlb%5n8!'
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-ALLOWED_HOSTS = []
+DEBUG = os.getenv('DEBUG') is not None
+
+ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS')
+ALLOWED_HOSTS = ALLOWED_HOSTS.split(';') if ALLOWED_HOSTS else []
 
 
 # Application definition
