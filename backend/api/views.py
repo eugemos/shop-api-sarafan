@@ -11,5 +11,10 @@ class CategoryListView(generics.ListAPIView):
 
 
 class ProductListView(generics.ListAPIView):
-    queryset = Product.objects.all().prefetch_related('images')
+    queryset = Product.objects.all().prefetch_related(
+        'images'
+    ).order_by(
+        'subcategory__category', 'subcategory'
+    )
+
     serializer_class = ProductSerializer
