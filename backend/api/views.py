@@ -6,10 +6,10 @@ from .serializers import CategorySerializer, ProductSerializer
 
 
 class CategoryListView(generics.ListAPIView):
-    queryset = Category.objects.all()
+    queryset = Category.objects.all().prefetch_related('subcategories')
     serializer_class = CategorySerializer
 
 
 class ProductListView(generics.ListAPIView):
-    queryset = Product.objects.all()
+    queryset = Product.objects.all().prefetch_related('images')
     serializer_class = ProductSerializer
