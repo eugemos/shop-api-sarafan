@@ -39,22 +39,25 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 class ProductInCartSerializer(serializers.ModelSerializer):
-    user = serializers.SlugRelatedField(slug_field='username', read_only=True)
     product = serializers.SlugRelatedField(
         slug_field='slug',
-        # queryset=Product.objects.all(),
-        read_only=True
+        read_only=True,
     )
 
     class Meta:
         model = ProductInCart
-        # read_only_fields = ('user',)
-        fields = ('user', 'product', 'amount')
+        fields = ('product', 'amount')
 
 
 class UserCartSerializer(serializers.ModelSerializer):
     products_in_cart = ProductInCartSerializer(many=True, read_only=True)
+    cost = serializers.SerializerMethodField()
 
     class Meta:
         model = get_user_model()
-        fields = ('username', 'products_in_cart')
+        fields = ('username', 'products_in_cart', 'cost')
+
+    def get_cost(self, user):
+        return sum(
+            (p.amount * p.product.price for p in user.products_in_cart.all())
+        )
