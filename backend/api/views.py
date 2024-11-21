@@ -33,6 +33,8 @@ class ProductInCartView(
     mixins.CreateModelMixin, mixins.UpdateModelMixin,
     mixins.DestroyModelMixin, generics.GenericAPIView
 ):
+    """Действия над корзиной."""
+
     serializer_class = ProductInCartSerializer
     permission_classes = (permissions.IsAuthenticated,)
     lookup_field = 'product__slug'
@@ -42,16 +44,26 @@ class ProductInCartView(
         return ProductInCart.objects.filter(user=self.request.user)
 
     def put(self, request, *args, **kwargs):
+        """Добавить товар в корзину.
+        Если товар уже есть в корзине, то изменить его количество.
+        """
         try:
             return self.update(request, *args, **kwargs)
         except http.Http404:
             return self.create(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):
+        """Добавить товар в корзину.
+        Если товар уже есть в корзине, то увеличить его количество.
+        """
         try:
             return self.add_amount(request, *args, **kwargs)
         except http.Http404:
             return self.create(request, *args, **kwargs)
+
+    def delete(self, request, *args, **kwargs):
+        """Удалить товар из корзины."""
+        return self.destroy(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         serializer.save(
@@ -75,15 +87,13 @@ class ProductInCartView(
 
         return Response(serializer.data)
 
-    # def create(self, )
-
 
 class CartView(generics.RetrieveDestroyAPIView):
-    # queryset = get_user_model().objects.all().prefetch_related(
-    #     'products_in_cart'
-    # )
     serializer_class = UserCartSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def get_object(self):
         return self.request.user
+
+    def perform_destroy(self, user):
+        user.products_in_cart.all().delete()
