@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.core.validators import MinValueValidator
 from django.db import models
 
 from products.models import Product
@@ -17,7 +18,12 @@ class ProductInCart(models.Model):
         on_delete=models.CASCADE,
         related_name='in_cart_of_users',
     )
-    amount = models.PositiveIntegerField('количество')
+    amount = models.PositiveIntegerField(
+        'количество',
+        validators=(
+            MinValueValidator(1, 'amount must be greater then 0'),
+        )
+    )
 
     class Meta:
         verbose_name = 'товар в корзине'
