@@ -1,6 +1,6 @@
 from django import http
-# from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+from drf_spectacular.utils import extend_schema
 from rest_framework import generics, mixins, permissions
 from rest_framework.response import Response
 
@@ -14,11 +14,13 @@ from .serializers import (
 )
 
 
+@extend_schema(tags=('Categories',))
 class CategoryListView(generics.ListAPIView):
     queryset = Category.objects.all().prefetch_related('subcategories')
     serializer_class = CategorySerializer
 
 
+@extend_schema(tags=('Products',))
 class ProductListView(generics.ListAPIView):
     queryset = Product.objects.all().prefetch_related(
         'images'
@@ -29,6 +31,7 @@ class ProductListView(generics.ListAPIView):
     serializer_class = ProductSerializer
 
 
+@extend_schema(tags=('Cart',))
 class ProductInCartView(
     mixins.CreateModelMixin, mixins.UpdateModelMixin,
     mixins.DestroyModelMixin, generics.GenericAPIView
@@ -88,6 +91,7 @@ class ProductInCartView(
         return Response(serializer.data)
 
 
+@extend_schema(tags=('Cart',))
 class CartView(generics.RetrieveDestroyAPIView):
     serializer_class = UserCartSerializer
     permission_classes = (permissions.IsAuthenticated,)
