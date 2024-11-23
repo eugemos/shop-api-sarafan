@@ -8,10 +8,13 @@ def generate():
                 yield char
 
 
-def get_nth(n: int) -> str | None:
-    res = None
+def generate_n(n: int):
     it = generate()
     for i in range(n):
-        res = next(it)
+        yield next(it)
 
-    return res
+
+if __name__ == '__main__':
+    n = int(input('Input N: '))
+    for c in generate_n(n):
+        print(c, end='')
