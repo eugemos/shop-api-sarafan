@@ -13,11 +13,7 @@ urlpatterns = [
     path('cart/<slug:product>/', ProductInCartView.as_view()),
     path('cart/', CartView.as_view()),
 
-
-    # path('auth/', include('djoser.urls')),
-    # re_path(r'^auth/', include('djoser.urls')),
     path('auth/', include('djoser.urls.authtoken')),
-    # re_path(r'^auth/', include('djoser.urls.authtoken')),
 
     path('schema/', SpectacularAPIView.as_view(), name='schema'),
     path(
