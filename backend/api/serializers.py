@@ -57,7 +57,7 @@ class UserCartSerializer(serializers.ModelSerializer):
         model = get_user_model()
         fields = ('username', 'products_in_cart', 'cost')
 
-    def get_cost(self, user):
+    def get_cost(self, user) -> int:
         return sum(
             (p.amount * p.product.price for p in user.products_in_cart.all())
         )
