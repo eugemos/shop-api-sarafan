@@ -28,3 +28,4 @@ class ProductInCart(models.Model):
     class Meta:
         verbose_name = 'товар в корзине'
         verbose_name_plural = 'товары в корзине'
+        ordering = ['product__name']

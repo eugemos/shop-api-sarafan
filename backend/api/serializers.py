@@ -40,7 +40,7 @@ class ProductSerializer(serializers.ModelSerializer):
 
 class ProductInCartSerializer(serializers.ModelSerializer):
     product = serializers.SlugRelatedField(
-        slug_field='slug',
+        slug_field='name',
         read_only=True,
     )
 
